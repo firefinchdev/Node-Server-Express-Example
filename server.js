@@ -3,8 +3,17 @@ const hbs = require('hbs');
 
 const app = express();
 
+hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine','hbs');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')); //can use localhost:3000/help.html
+
+hbs.registerHelper('currentYear', ()=> {
+    return new Date().getFullYear();
+});
+
+hbs.registerHelper('screamIt', (text)=> {
+    return text.toUpperCase();
+});
 
 app.get('/', (request,response) => {
     response.send({
@@ -13,22 +22,30 @@ app.get('/', (request,response) => {
     });
 });
 
-app.get('/about',(request,response) => {
-    response.render('template.hbs',{
-        pageTitle: 'About Page',
-        pageBody: 'This is the content of about page.',
-        currentYear: new Date().getFullYear()
+app.get('/meow',(request,response) =>{
+    response.send('Meow');
+});
+
+app.get('/home',(request,response) => {
+    response.render('home.hbs',{
+        pageTitle: 'Home Page',
+        pageBody: 'This is the content of home page.'
+        //currentYear: new Date().getFullYear()
     });
-    //response.send('Meow');
+});
+
+app.get('/about',(request,response) => {
+    response.render('about.hbs',{
+        pageTitle: 'About Page'
+        //currentYear: new Date().getFullYear()
+    });
 });
 
 app.get('/contact',(request,response) => {
-    response.render('template.hbs',{
+    response.render('about.hbs',{
         pageTitle: 'Contact Page',
-        pageBody: 'This is the content of contact page.',
         currentYear: new Date().getFullYear()
     });
-    //response.send('Meow');
 });
 
 app.listen(3000,() => {
